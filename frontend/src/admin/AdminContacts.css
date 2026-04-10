@@ -1,0 +1,137 @@
+/* ══════════════════════════════════════
+   ADMIN CONTACTS - Specific Styles
+   Uses AdminTables.css + AdminUsers.css
+══════════════════════════════════════ */
+
+/* ── Filter Grid ── */
+.contacts-filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ── Date Range ── */
+.contacts-date-range {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.contacts-date-range .admin-input {
+  width: 50%;
+}
+
+/* ── Email Link ── */
+.contacts-email-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: opacity 0.2s;
+}
+
+.contacts-email-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* ── Phone Link ── */
+.contacts-phone-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.contacts-phone-link:hover {
+  color: #667eea;
+}
+
+/* ── Subject Tag ── */
+.contacts-subject-tag {
+  display: inline-block;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Contact Status Badges ── */
+.contacts-status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.contacts-status-badge:hover {
+  opacity: 0.8;
+}
+
+.contacts-status-new {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.contacts-status-read {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+/* ── View Modal Grid ── */
+.contacts-view-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.contacts-view-grid .users-detail-row {
+  padding: 0.625rem 0;
+}
+
+/* ── Message Box ── */
+.contacts-message-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0.375rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .contacts-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contacts-filter-grid > div:first-child {
+    grid-column: span 1;
+  }
+
+  .contacts-date-range {
+    flex-direction: column;
+  }
+
+  .contacts-date-range .admin-input {
+    width: 100%;
+  }
+
+  .contacts-view-grid {
+    grid-template-columns: 1fr;
+  }
+}
