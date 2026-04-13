@@ -8,7 +8,6 @@ import {
   User,
   LogOut,
   LayoutDashboard,
-  ChevronDown,
   Settings,
   Ticket,
   Camera,
@@ -113,8 +112,8 @@ function UploadableAvatar({
             Change
           </span>
         </div>
-        <div className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#0d1526] bg-primary shadow-md">
-          <Camera className="h-2.5 w-2.5 text-primary-foreground" />
+        <div className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-primary shadow-md">
+          <Camera className="h-2.5 w-2.5 text-white" />
         </div>
       </button>
     </>
@@ -130,7 +129,6 @@ export default function Navbar() {
   const [navLoading, setNavLoading] = useState(false);
   const profileRef = useRef(null);
 
-  // ── Navigate with loader ──────────────────────────────────────────────────
   const handleNavigate = (path) => {
     setNavLoading(true);
     setIsMobileMenuOpen(false);
@@ -140,7 +138,6 @@ export default function Navbar() {
     }, 1400);
   };
 
-  // ─── Auth State ───────────────────────────────────────────────────────────
   const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     const syncAuth = () => {
@@ -241,35 +238,13 @@ export default function Navbar() {
     : null;
 
   const dropdownItems = [
-    {
-      icon: LayoutDashboard,
-      label: "Dashboard",
-      onClick: () => {
-        navigate("/user/dashboard");
-        setIsProfileOpen(false);
-      },
-    },
-    {
-      icon: Ticket,
-      label: "My Bookings",
-      onClick: () => {
-        navigate("/user/bookings");
-        setIsProfileOpen(false);
-      },
-    },
-    {
-      icon: Settings,
-      label: "Settings",
-      onClick: () => {
-        navigate("/user/settings");
-        setIsProfileOpen(false);
-      },
-    },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/user/dashboard" },
+    { icon: Ticket, label: "My Bookings", path: "/user/bookings" },
+    { icon: Settings, label: "Settings", path: "/user/settings" },
   ];
 
   return (
     <>
-      {/* ── Loader overlay on Sign In / Register click ── */}
       {navLoading && <Loader key="nav-loader" />}
 
       <nav
@@ -313,6 +288,8 @@ export default function Navbar() {
                   <LayoutDashboard className="h-3.5 w-3.5" />
                   Dashboard
                 </button>
+
+                {/* Profile dropdown */}
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setIsProfileOpen((p) => !p)}
@@ -325,43 +302,173 @@ export default function Navbar() {
                       size="sm"
                     />
                   </button>
+
+                  {/* ── DROPDOWN — clean white card ── */}
                   <div
-                    className={`absolute right-0 top-[calc(100%+10px)] w-72 overflow-hidden rounded-2xl border border-white/10 bg-[#0d1526]/98 shadow-2xl backdrop-blur-xl transition-all duration-200 ${isProfileOpen ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"}`}
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      top: "calc(100% + 12px)",
+                      width: 280,
+                      background: "#ffffff",
+                      border: "1px solid #e2e6f0",
+                      borderRadius: 18,
+                      boxShadow:
+                        "0 20px 60px rgba(13,21,38,0.18), 0 4px 16px rgba(51,102,255,0.08)",
+                      zIndex: 100,
+                      overflow: "hidden",
+                      transition: "all 0.2s cubic-bezier(.16,1,.3,1)",
+                      opacity: isProfileOpen ? 1 : 0,
+                      transform: isProfileOpen
+                        ? "translateY(0)"
+                        : "translateY(-8px)",
+                      pointerEvents: isProfileOpen ? "auto" : "none",
+                    }}
                   >
-                    <div className="flex flex-col items-center gap-2 border-b border-white/10 px-4 pb-4 pt-5">
+                    {/* User info header */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "22px 20px 18px",
+                        borderBottom: "1px solid #f1f5f9",
+                        background: "#f8faff",
+                      }}
+                    >
                       <UploadableAvatar
                         src={profilePhoto}
                         fallbackUrl={fallbackAvatarUrl}
                         fullName={fullName}
                         onUpload={handlePhotoUpload}
                       />
-                      <div className="text-center">
-                        <p className="text-sm font-semibold text-white">
+                      <div style={{ textAlign: "center" }}>
+                        <p
+                          style={{
+                            fontSize: 15,
+                            fontWeight: 600,
+                            color: "#0d1526",
+                            fontFamily: "'Outfit', sans-serif",
+                            marginBottom: 2,
+                          }}
+                        >
                           {fullName}
                         </p>
                         {email && (
-                          <p className="text-xs text-white/50">{email}</p>
+                          <p
+                            style={{
+                              fontSize: 12,
+                              color: "#64748b",
+                              fontFamily: "'Outfit', sans-serif",
+                            }}
+                          >
+                            {email}
+                          </p>
                         )}
                       </div>
                     </div>
-                    <div className="p-2">
-                      {dropdownItems.map(({ icon: Icon, label, onClick }) => (
+
+                    {/* Menu items */}
+                    <div style={{ padding: "8px 8px" }}>
+                      {dropdownItems.map(({ icon: Icon, label, path }) => (
                         <button
                           key={label}
-                          onClick={onClick}
-                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/8 hover:text-white"
+                          onClick={() => {
+                            navigate(path);
+                            setIsProfileOpen(false);
+                          }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            width: "100%",
+                            padding: "10px 14px",
+                            background: "none",
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: "#1e2940",
+                            fontFamily: "'Outfit', sans-serif",
+                            transition: "background .14s",
+                            textAlign: "left",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.background = "#eff4ff")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.background = "none")
+                          }
                         >
-                          <Icon className="h-4 w-4 text-primary/70" />
+                          <span
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: 8,
+                              background: "#eff4ff",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Icon size={15} color="#3366ff" />
+                          </span>
                           {label}
                         </button>
                       ))}
                     </div>
-                    <div className="border-t border-white/10 p-2">
+
+                    {/* Logout */}
+                    <div
+                      style={{
+                        padding: "0 8px 8px",
+                        borderTop: "1px solid #f1f5f9",
+                      }}
+                    >
                       <button
                         onClick={handleLogout}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-400/80 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                          width: "100%",
+                          padding: "10px 14px",
+                          background: "none",
+                          border: "none",
+                          borderRadius: 10,
+                          cursor: "pointer",
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "#e53e3e",
+                          fontFamily: "'Outfit', sans-serif",
+                          transition: "background .14s",
+                          textAlign: "left",
+                          marginTop: 4,
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background = "#fff5f5")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "none")
+                        }
                       >
-                        <LogOut className="h-4 w-4" />
+                        <span
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 8,
+                            background: "#fff5f5",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <LogOut size={15} color="#e53e3e" />
+                        </span>
                         Logout
                       </button>
                     </div>
@@ -370,14 +477,12 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                {/* ✅ Sign In — with loader */}
                 <button
                   className="text-sm font-medium uppercase tracking-wider text-white/80 transition-colors hover:text-white"
                   onClick={() => handleNavigate("/login")}
                 >
                   Sign In
                 </button>
-                {/* ✅ Register Now — with loader */}
                 <button
                   className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:shadow-[0_0_20px_rgba(51,102,255,0.4)]"
                   onClick={() => handleNavigate("/register")}
@@ -445,11 +550,11 @@ export default function Navbar() {
                       </p>
                     </div>
                   </div>
-                  {dropdownItems.map(({ icon: Icon, label, onClick }) => (
+                  {dropdownItems.map(({ icon: Icon, label, path }) => (
                     <button
                       key={label}
                       onClick={() => {
-                        onClick();
+                        navigate(path);
                         setIsMobileMenuOpen(false);
                       }}
                       className="flex items-center gap-3 rounded-lg border border-white/10 px-4 py-3 text-left text-sm font-medium uppercase tracking-wider text-white/80 transition-colors hover:bg-white/5 hover:text-white"
@@ -468,14 +573,12 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* ✅ Mobile Sign In — with loader */}
                   <button
                     className="rounded-lg px-4 py-3 text-left text-sm font-medium uppercase tracking-wider text-white/80 transition-colors hover:bg-white/5 hover:text-white"
                     onClick={() => handleNavigate("/login")}
                   >
                     Sign In
                   </button>
-                  {/* ✅ Mobile Register Now — with loader */}
                   <button
                     className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:shadow-[0_0_20px_rgba(51,102,255,0.4)]"
                     onClick={() => handleNavigate("/register")}
